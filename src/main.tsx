@@ -4,6 +4,8 @@ import './index.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { BottomBar } from './shared/ui/BottomBar/BottomBar'
 import Productos from './features/products/Productos'
+import { ClientConfigProvider } from './config/ClientConfigContext'
+
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="h-screen">
@@ -34,6 +36,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ClientConfigProvider>
+      <RouterProvider router={router} />
+    </ClientConfigProvider>
   </StrictMode>,
 )

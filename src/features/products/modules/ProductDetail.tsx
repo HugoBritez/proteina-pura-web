@@ -1,6 +1,7 @@
 import { Minus, PlusIcon, Star, X } from 'lucide-react'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useClientConfig } from '../../../config/ClientConfigContext'
 
 interface Product {
     image: string
@@ -19,10 +20,11 @@ interface ProductDetailProps {
 const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
     const [cantidad, setCantidad] = useState(1)
     const [isOpen, setIsOpen] = useState(true)
+    const { config } = useClientConfig()
 
     const handleClose = () => {
         setIsOpen(false)
-        setTimeout(onClose, 200) // Esperamos a que termine la animación antes de cerrar
+        setTimeout(onClose, 200)
     }
 
     const handleIncrement = () => {
@@ -79,7 +81,10 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
                                     className="w-full h-full object-contain" 
                                 />
                                 {(product.stock || 0) < 5 && (
-                                    <div className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-full text-sm">
+                                    <div 
+                                        className="absolute top-2 right-2 text-white px-3 py-1 rounded-full text-sm"
+                                        style={{ backgroundColor: config.tema.colores.primario }}
+                                    >
                                         ¡Últimas unidades!
                                     </div>
                                 )}
@@ -108,14 +113,18 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
                                 </p>
 
                                 <div className="flex flex-col gap-4 mt-4">
-                                    <p className="text-3xl font-bold text-red-500">
+                                    <p 
+                                        className="text-3xl font-bold"
+                                        style={{ color: config.tema.colores.primario }}
+                                    >
                                         {formatPrice(product.price)}
                                     </p>
 
                                     <div className="flex items-center gap-4">
                                         <div className="flex items-center gap-2">
                                             <button 
-                                                className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                className="text-white p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                style={{ backgroundColor: config.tema.colores.primario }}
                                                 onClick={handleDecrement}
                                                 disabled={cantidad <= 1}
                                             >
@@ -133,14 +142,18 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
                                                 }}
                                             />
                                             <button 
-                                                className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                className="text-white p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                style={{ backgroundColor: config.tema.colores.primario }}
                                                 onClick={handleIncrement}
                                                 disabled={cantidad >= (product.stock || 10)}
                                             >
                                                 <PlusIcon size={16} />
                                             </button>
                                         </div>
-                                        <button className="flex-1 bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors text-lg font-medium">
+                                        <button 
+                                            className="flex-1 text-white px-6 py-3 rounded-lg transition-colors text-lg font-medium"
+                                            style={{ backgroundColor: config.tema.colores.primario }}
+                                        >
                                             Agregar al carrito
                                         </button>
                                     </div>

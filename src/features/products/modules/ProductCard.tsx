@@ -1,5 +1,6 @@
-import { Minus, PlusIcon,  ShoppingCart } from 'lucide-react'
+import { Minus, PlusIcon, ShoppingCart } from 'lucide-react'
 import { useState } from 'react'
+import { useClientConfig } from '../../../config/ClientConfigContext'
 
 interface ProductCardProps {
     image: string
@@ -13,6 +14,7 @@ interface ProductCardProps {
 
 const ProductCard = ({ image, name, price, stock = 10, onSelect }: ProductCardProps) => {
     const [cantidad, setCantidad] = useState(1)
+    const { config } = useClientConfig()
 
     const handleIncrement = () => {
         if (cantidad < stock) {
@@ -47,7 +49,10 @@ const ProductCard = ({ image, name, price, stock = 10, onSelect }: ProductCardPr
                     />
                 </div>
                 {stock < 5 && (
-                    <div className="absolute top-1 right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+                    <div 
+                        className="absolute top-1 right-1 text-white text-xs px-1.5 py-0.5 rounded-full"
+                        style={{ backgroundColor: config.tema.colores.primario }}
+                    >
                         ¡Últimas unidades!
                     </div>
                 )}
@@ -55,14 +60,18 @@ const ProductCard = ({ image, name, price, stock = 10, onSelect }: ProductCardPr
             
             <div className="flex flex-col gap-1 p-2">
                 <h2 
-                    className="text-sm font-semibold text-slate-800 line-clamp-2 cursor-pointer hover:text-red-500 transition-colors"
+                    className="text-sm font-semibold text-slate-800 line-clamp-2 cursor-pointer transition-colors"
+                    style={{ '--tw-text-opacity': 1, color: config.tema.colores.subtexto } as React.CSSProperties}
                     onClick={onSelect}
                 >
                     {name}
                 </h2>
 
                 <div className="flex items-center gap-1">
-                    <p className="text-sm font-bold text-red-500">
+                    <p 
+                        className="text-sm font-bold"
+                        style={{ color: config.tema.colores.primario }}
+                    >
                         {formatPrice(price)}
                     </p>
                     <span className="text-xs text-slate-500">({stock})</span>
@@ -71,7 +80,8 @@ const ProductCard = ({ image, name, price, stock = 10, onSelect }: ProductCardPr
                 <div className="flex flex-row items-center gap-2 mt-1">
                     <div className="flex items-center gap-1">
                         <button 
-                            className="bg-red-500 text-white p-1 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="text-white p-1 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            style={{ backgroundColor: config.tema.colores.primario }}
                             onClick={handleDecrement}
                             disabled={cantidad <= 1}
                         >
@@ -89,14 +99,21 @@ const ProductCard = ({ image, name, price, stock = 10, onSelect }: ProductCardPr
                             }}
                         />
                         <button 
-                            className="bg-red-500 text-white p-1 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="text-white p-1 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            style={{ backgroundColor: config.tema.colores.primario }}
                             onClick={handleIncrement}
                             disabled={cantidad >= stock}
                         >
                             <PlusIcon size={12} />
                         </button>
                     </div>
-                    <button className="border border-red-500 text-red-500 p-1.5 rounded-lg hover:bg-red-600 transition-colors text-sm font-medium">
+                    <button 
+                        className="p-1.5 rounded-lg transition-colors text-sm font-medium"
+                        style={{ 
+                            borderColor: config.tema.colores.primario,
+                            color: config.tema.colores.primario
+                        }}
+                    >
                         <ShoppingCart size={12} />
                     </button>
                 </div>
