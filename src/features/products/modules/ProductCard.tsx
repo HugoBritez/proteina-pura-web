@@ -43,47 +43,43 @@ const ProductCard = ({ image, name, price, stock = 10, onSelect }: ProductCardPr
                     <img 
                         src={image} 
                         alt={name} 
-                        className="w-full h-full object-contain p-4" 
+                        className="w-full h-full object-contain p-2" 
                     />
                 </div>
                 {stock < 5 && (
-                    <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                    <div className="absolute top-1 right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
                         ¡Últimas unidades!
                     </div>
                 )}
             </div>
             
-            <div className="flex flex-col gap-2 p-4 pt-0">
+            <div className="flex flex-col gap-1 p-2">
                 <h2 
-                    className="text-base font-semibold text-slate-800 line-clamp-2 cursor-pointer hover:text-red-500 transition-colors"
+                    className="text-sm font-semibold text-slate-800 line-clamp-2 cursor-pointer hover:text-red-500 transition-colors"
                     onClick={onSelect}
                 >
                     {name}
                 </h2>
 
-                
-
                 <div className="flex items-center gap-1">
-                <p className="text-md font-bold text-red-500">
-                    {formatPrice(price)}
-                </p>
-                    <span className="text-xs text-slate-500 ml-1">({stock} disponibles)</span>
+                    <p className="text-sm font-bold text-red-500">
+                        {formatPrice(price)}
+                    </p>
+                    <span className="text-xs text-slate-500">({stock})</span>
                 </div>
                 
-                
-                
-                <div className="flex flex-row sm:flex-row items-center gap-3 mt-2">
-                    <div className="flex items-center gap-2">
+                <div className="flex flex-row items-center gap-2 mt-1">
+                    <div className="flex items-center gap-1">
                         <button 
-                            className="bg-red-500 text-white p-1.5 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="bg-red-500 text-white p-1 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             onClick={handleDecrement}
                             disabled={cantidad <= 1}
                         >
-                            <Minus size={14} />
+                            <Minus size={12} />
                         </button>
                         <input 
                             type="number" 
-                            className="w-12 text-center border rounded-lg p-1 text-sm"
+                            className="w-10 text-center border rounded-lg p-0.5 text-xs"
                             value={cantidad}
                             min={1}
                             max={stock}
@@ -93,15 +89,15 @@ const ProductCard = ({ image, name, price, stock = 10, onSelect }: ProductCardPr
                             }}
                         />
                         <button 
-                            className="bg-red-500 text-white p-1.5 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="bg-red-500 text-white p-1 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             onClick={handleIncrement}
                             disabled={cantidad >= stock}
                         >
-                            <PlusIcon size={14} />
+                            <PlusIcon size={12} />
                         </button>
                     </div>
-                    <button className=" sm:w-auto border border-red-500 text-red-500 px-4 py-2 rounded-lg hover:bg-red-600 transition-colors text-sm font-medium">
-                        <ShoppingCart size={14} />
+                    <button className="border border-red-500 text-red-500 p-1.5 rounded-lg hover:bg-red-600 transition-colors text-sm font-medium">
+                        <ShoppingCart size={12} />
                     </button>
                 </div>
             </div>
