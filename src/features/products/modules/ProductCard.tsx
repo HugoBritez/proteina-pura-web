@@ -1,4 +1,4 @@
-import { Minus, PlusIcon, Star } from 'lucide-react'
+import { Minus, PlusIcon,  ShoppingCart } from 'lucide-react'
 import { useState } from 'react'
 
 interface ProductCardProps {
@@ -11,7 +11,7 @@ interface ProductCardProps {
     onSelect?: () => void
 }
 
-const ProductCard = ({ image, name, price, rating = 0, stock = 10, onSelect }: ProductCardProps) => {
+const ProductCard = ({ image, name, price, stock = 10, onSelect }: ProductCardProps) => {
     const [cantidad, setCantidad] = useState(1)
 
     const handleIncrement = () => {
@@ -62,22 +62,17 @@ const ProductCard = ({ image, name, price, rating = 0, stock = 10, onSelect }: P
                 </h2>
 
                 
+
                 <div className="flex items-center gap-1">
-                    {Array.from({ length: 5 }).map((_, index) => (
-                        <Star 
-                            key={index}
-                            size={14}
-                            className={index < rating ? "text-yellow-400 fill-yellow-400" : "text-slate-300"}
-                        />
-                    ))}
+                <p className="text-md font-bold text-red-500">
+                    {formatPrice(price)}
+                </p>
                     <span className="text-xs text-slate-500 ml-1">({stock} disponibles)</span>
                 </div>
                 
-                <p className="text-lg font-bold text-red-500">
-                    {formatPrice(price)}
-                </p>
                 
-                <div className="flex flex-col sm:flex-row items-center gap-3 mt-2">
+                
+                <div className="flex flex-row sm:flex-row items-center gap-3 mt-2">
                     <div className="flex items-center gap-2">
                         <button 
                             className="bg-red-500 text-white p-1.5 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -105,8 +100,8 @@ const ProductCard = ({ image, name, price, rating = 0, stock = 10, onSelect }: P
                             <PlusIcon size={14} />
                         </button>
                     </div>
-                    <button className="w-full sm:w-auto bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors text-sm font-medium">
-                        Agregar al carrito
+                    <button className=" sm:w-auto border border-red-500 text-red-500 px-4 py-2 rounded-lg hover:bg-red-600 transition-colors text-sm font-medium">
+                        <ShoppingCart size={14} />
                     </button>
                 </div>
             </div>
