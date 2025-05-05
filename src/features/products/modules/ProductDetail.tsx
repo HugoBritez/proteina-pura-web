@@ -1,19 +1,11 @@
-import { Minus, PlusIcon, Star, X } from 'lucide-react'
+import { Minus, PlusIcon, X } from 'lucide-react'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useClientConfig } from '../../../config/ClientConfigContext'
-
-interface Product {
-    image: string
-    name: string
-    price: number
-    description?: string
-    rating?: number
-    stock?: number
-}
+import { Producto } from '../types/product.type'
 
 interface ProductDetailProps {
-    product: Product
+    product: Producto
     onClose: () => void
 }
 
@@ -28,7 +20,7 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
     }
 
     const handleIncrement = () => {
-        if (cantidad < (product.stock || 10)) {
+        if (product.stock === true) {
             setCantidad(cantidad + 1)
         }
     }
@@ -76,11 +68,11 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
                         <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="aspect-square relative">
                                 <img 
-                                    src={product.image} 
-                                    alt={product.name}
+                                    src={product.imagen || '/placeholder.png'}
+                                    alt={product.nombre}
                                     className="w-full h-full object-contain" 
                                 />
-                                {(product.stock || 0) < 5 && (
+                                    {(product.stock) === true && (
                                     <div 
                                         className="absolute top-2 right-2 text-white px-3 py-1 rounded-full text-sm"
                                         style={{ backgroundColor: config.tema.colores.primario }}
@@ -92,24 +84,17 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
 
                             <div className="flex flex-col gap-4">
                                 <h1 className="text-2xl font-bold text-slate-800">
-                                    {product.name}
+                                    {product.nombre}
                                 </h1>
 
                                 <div className="flex items-center gap-2">
-                                    {Array.from({ length: 5 }).map((_, index) => (
-                                        <Star 
-                                            key={index}
-                                            size={20}
-                                            className={index < (product.rating || 0) ? "text-yellow-400 fill-yellow-400" : "text-slate-300"}
-                                        />
-                                    ))}
                                     <span className="text-sm text-slate-500">
-                                        ({product.stock} disponibles)
+                                        {product.stock ? "Disponible" : "No disponible"}
                                     </span>
                                 </div>
 
                                 <p className="text-slate-600">
-                                    {product.description}
+                                    {product.descripcion}
                                 </p>
 
                                 <div className="flex flex-col gap-4 mt-4">
@@ -117,7 +102,7 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
                                         className="text-3xl font-bold"
                                         style={{ color: config.tema.colores.primario }}
                                     >
-                                        {formatPrice(product.price)}
+                                        {formatPrice(product.precio)}
                                     </p>
 
                                     <div className="flex items-center gap-4">
@@ -135,9 +120,8 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
                                                 className="w-16 text-center border rounded-lg p-2 text-lg"
                                                 value={cantidad}
                                                 min={1}
-                                                max={product.stock}
                                                 onChange={(e) => {
-                                                    const value = Math.min(Math.max(1, Number(e.target.value)), product.stock || 10)
+                                                    const value = Math.min(Math.max(1, Number(e.target.value)), product.stock === true ? 10 : 0)
                                                     setCantidad(value)
                                                 }}
                                             />
@@ -145,7 +129,7 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
                                                 className="text-white p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                                 style={{ backgroundColor: config.tema.colores.primario }}
                                                 onClick={handleIncrement}
-                                                disabled={cantidad >= (product.stock || 10)}
+                                                disabled={product.stock === false}
                                             >
                                                 <PlusIcon size={16} />
                                             </button>

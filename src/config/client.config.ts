@@ -5,6 +5,7 @@ export interface ClientConfig {
         email: string;
         direccion: string;
         logo: string;
+        api_url: string;
     };
     tema: {
         colores: {
@@ -38,7 +39,8 @@ export const defaultConfig: ClientConfig = {
         telefono: "+54 9 11 1234-5678",
         email: "contacto@proteinapura.com",
         direccion: "Av. Corrientes 1234, CABA",
-        logo: "/logo.png"
+        logo: "/logo.png",
+        api_url: "http://localhost:3000"
     },
     tema: {
         colores: {

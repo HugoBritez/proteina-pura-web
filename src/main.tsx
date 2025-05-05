@@ -5,7 +5,8 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { BottomBar } from './shared/ui/BottomBar/BottomBar'
 import Productos from './features/products/Productos'
 import { ClientConfigProvider } from './config/ClientConfigContext'
-
+import { Dashboard } from './features/admin/Dashboard'
+import { Auth } from './features/auth/Auth'
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="h-screen">
@@ -31,6 +32,14 @@ const router = createBrowserRouter([
   {
     path: "/contact",
     element: <Layout><div>Contact</div></Layout>,
+  },
+  {
+    path: "/admin",
+    element: <Layout><Dashboard /></Layout>,
+  },
+  {
+    path: "/login",
+    element: <Layout><Auth /></Layout>,
   },
 ])
 

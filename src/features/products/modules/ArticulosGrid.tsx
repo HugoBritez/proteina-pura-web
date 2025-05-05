@@ -1,70 +1,111 @@
-import ProductoFoto from './../../../assets/productos/image.png'
-import ProductCard from './ProductCard'
-import { useState } from 'react'
-import ProductDetail from './ProductDetail'
+import { useState, useEffect, useCallback } from 'react';
+import { Producto } from '../types/product.type';
+import { useProductos } from '../hooks/useProductos';
+import ProductCard from './ProductCard';
+import ProductDetail from './ProductDetail';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-interface Product {
-    image: string
-    name: string
-    price: number
-    description?: string
-    rating?: number
-    stock?: number
+interface ArticulosGridProps {
+    categoria: string;
+    busqueda: string;
 }
 
-const ArticulosGrid = () => {
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+const ArticulosGrid = ({ categoria, busqueda }: ArticulosGridProps) => {
+    const [selectedProduct, setSelectedProduct] = useState<Producto | null>(null);
+    const { productos, loading, error, getProductos, page, totalCount, pageSize } = useProductos();
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-    const products = [
-        {
-            image: ProductoFoto,
-            name: "Proteina Elite",
-            price: 150000,
-            description: "Proteína de suero de leche de alta calidad con 30g de proteína por porción",
-            rating: 4,
-            stock: 8
-        },
-        // Ejemplo de productos adicionales para probar el grid
-        {
-            image: ProductoFoto,
-            name: "Proteina Elite Chocolate",
-            price: 150000,
-            description: "Proteína de suero de leche sabor chocolate",
-            rating: 5,
-            stock: 3
-        },
-        {
-            image: ProductoFoto,
-            name: "Proteina Elite Vainilla",
-            price: 150000,
-            description: "Proteína de suero de leche sabor vainilla",
-            rating: 4,
-            stock: 15
+    // Cargar productos inicialmente
+    useEffect(() => {
+        getProductos(busqueda, categoria, 1);
+    }, [busqueda, categoria, getProductos]);
+
+    const handlePageChange = useCallback(async (newPage: number) => {
+        if (newPage < 1 || newPage > Math.ceil(totalCount / pageSize)) return;
+        
+        setIsLoadingMore(true);
+        try {
+            await getProductos(busqueda, categoria, newPage);
+        } finally {
+            setIsLoadingMore(false);
         }
-    ]
+    }, [busqueda, categoria, getProductos, totalCount, pageSize]);
 
-    return (
-        <>
-            <div className="container mx-auto px-2 sm:px-4">
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-6">
-                    {products.map((product, index) => (
-                        <ProductCard
-                            key={index}
-                            {...product}
-                            onSelect={() => setSelectedProduct(product)}
-                        />
-                    ))}
+    const totalPages = Math.ceil(totalCount / pageSize);
+
+    if (loading && !isLoadingMore) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                    <p className="text-gray-600">Cargando productos...</p>
                 </div>
             </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="text-center">
+                    <p className="text-red-500">Error al cargar los productos: {error}</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (productos.length === 0) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="text-center">
+                    <p className="text-gray-600">No se encontraron productos</p>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-6">
+                {productos.map((producto) => (
+                    <ProductCard
+                        key={producto.id}
+                        producto={producto}
+                        onSelect={() => setSelectedProduct(producto)}
+                    />
+                ))}
+            </div>
+
+            {totalPages > 1 && (
+                <div className="flex justify-center items-center gap-4 mt-4">
+                    <button
+                        onClick={() => handlePageChange(page - 1)}
+                        disabled={page === 1 || isLoadingMore}
+                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <ChevronLeft size={24} />
+                    </button>
+                    <span className="text-sm font-medium">
+                        Página {page} de {totalPages}
+                    </span>
+                    <button
+                        onClick={() => handlePageChange(page + 1)}
+                        disabled={page === totalPages || isLoadingMore}
+                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <ChevronRight size={24} />
+                    </button>
+                </div>
+            )}
 
             {selectedProduct && (
-                <ProductDetail 
-                    product={selectedProduct} 
-                    onClose={() => setSelectedProduct(null)} 
+                <ProductDetail
+                    product={selectedProduct}
+                    onClose={() => setSelectedProduct(null)}
                 />
             )}
-        </>
-    )
-}
+        </div>
+    );
+};
 
-export default ArticulosGrid
+export default ArticulosGrid;

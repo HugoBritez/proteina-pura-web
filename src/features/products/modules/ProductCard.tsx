@@ -1,23 +1,19 @@
-import { Minus, PlusIcon, ShoppingCart } from 'lucide-react'
+import { Minus, Plus as PlusIcon, ShoppingCart } from 'lucide-react'
 import { useState } from 'react'
 import { useClientConfig } from '../../../config/ClientConfigContext'
+import { Producto } from '../types/product.type'
 
 interface ProductCardProps {
-    image: string
-    name: string
-    price: number
-    description?: string
-    rating?: number
-    stock?: number
-    onSelect?: () => void
+    producto: Producto
+    onSelect: () => void
 }
 
-const ProductCard = ({ image, name, price, stock = 10, onSelect }: ProductCardProps) => {
-    const [cantidad, setCantidad] = useState(1)
+const ProductCard = ({ producto, onSelect }: ProductCardProps) => {
     const { config } = useClientConfig()
+    const [cantidad, setCantidad] = useState(1)
 
     const handleIncrement = () => {
-        if (cantidad < stock) {
+        if (cantidad < 10) {
             setCantidad(cantidad + 1)
         }
     }
@@ -29,31 +25,31 @@ const ProductCard = ({ image, name, price, stock = 10, onSelect }: ProductCardPr
     }
 
     const formatPrice = (price: number) => {
-        return new Intl.NumberFormat('es-PY', {
+        return new Intl.NumberFormat('es-AR', {
             style: 'currency',
-            currency: 'PYG'
+            currency: 'ARS'
         }).format(price)
     }
 
     return (
-        <div className="flex flex-col bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-slate-200 h-full">
-            <div 
-                className="relative w-full cursor-pointer"
-                onClick={onSelect}
-            >
+        <div 
+            className="flex flex-col bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-slate-200 h-full"
+            onClick={onSelect}
+        >
+            <div className="relative w-full cursor-pointer">
                 <div className="aspect-square">
-                    <img 
-                        src={image} 
-                        alt={name} 
-                        className="w-full h-full object-contain p-2" 
+                    <img
+                        src={producto.imagen || '/placeholder.png'}
+                        alt={producto.nombre}
+                        className="w-full h-full object-contain p-2"
                     />
                 </div>
-                {stock < 5 && (
+                {producto.stock !== null && (
                     <div 
                         className="absolute top-1 right-1 text-white text-xs px-1.5 py-0.5 rounded-full"
                         style={{ backgroundColor: config.tema.colores.primario }}
                     >
-                        ¡Últimas unidades!
+                        {producto.stock ? 'En stock' : 'Sin stock'}
                     </div>
                 )}
             </div>
@@ -62,9 +58,8 @@ const ProductCard = ({ image, name, price, stock = 10, onSelect }: ProductCardPr
                 <h2 
                     className="text-sm font-semibold text-slate-800 line-clamp-2 cursor-pointer transition-colors"
                     style={{ '--tw-text-opacity': 1, color: config.tema.colores.subtexto } as React.CSSProperties}
-                    onClick={onSelect}
                 >
-                    {name}
+                    {producto.nombre}
                 </h2>
 
                 <div className="flex items-center gap-1">
@@ -72,9 +67,8 @@ const ProductCard = ({ image, name, price, stock = 10, onSelect }: ProductCardPr
                         className="text-sm font-bold"
                         style={{ color: config.tema.colores.primario }}
                     >
-                        {formatPrice(price)}
+                        {formatPrice(producto.precio)}
                     </p>
-                    <span className="text-xs text-slate-500">({stock})</span>
                 </div>
                 
                 <div className="flex flex-row items-center gap-2 mt-1">
@@ -92,17 +86,17 @@ const ProductCard = ({ image, name, price, stock = 10, onSelect }: ProductCardPr
                             className="w-10 text-center border rounded-lg p-0.5 text-xs"
                             value={cantidad}
                             min={1}
-                            max={stock}
+                            max={10}
                             onChange={(e) => {
-                                const value = Math.min(Math.max(1, Number(e.target.value)), stock)
-                                setCantidad(value)
+                                const value = Math.min(Math.max(1, Number(e.target.value)), 10);
+                                setCantidad(value);
                             }}
                         />
                         <button 
                             className="text-white p-1 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             style={{ backgroundColor: config.tema.colores.primario }}
                             onClick={handleIncrement}
-                            disabled={cantidad >= stock}
+                            disabled={cantidad >= 10}
                         >
                             <PlusIcon size={12} />
                         </button>
