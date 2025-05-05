@@ -12,20 +12,20 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 bg-gray-300 bg-opacity-40 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-gray-300 bg-opacity-40 flex items-center justify-center z-[999] p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md relative"
+            className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md max-h-[90vh] overflow-y-auto relative"
             initial={{ scale: 0.95, opacity: 0, y: 40 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 40 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
           >
             <button
-              className="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-xl"
+              className="sticky top-0 right-0 float-right text-gray-400 hover:text-gray-700 text-xl"
               onClick={onClose}
               aria-label="Cerrar"
             >
