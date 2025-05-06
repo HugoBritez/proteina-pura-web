@@ -65,7 +65,7 @@ const ArticulosGrid = ({ categoria, busqueda }: ArticulosGridProps) => {
     }
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 pb-24">
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-6">
                 {productos.map((producto) => (
                     <ProductCard
