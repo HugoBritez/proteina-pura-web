@@ -23,7 +23,7 @@ export const useProductos = () => {
     const cache = useRef<Record<string, CacheItem>>({});
     const debounceTimeout = useRef<NodeJS.Timeout | undefined>(undefined);
 
-    const getCacheKey = (nombre?: string, categoria?: string, page: number = 1) => {
+    const getCacheKey = (nombre?: string, categoria?: number, page: number = 1) => {
         return `${nombre || ''}-${categoria || ''}-${page}`;
     };
 
@@ -31,7 +31,7 @@ export const useProductos = () => {
         return Date.now() - cacheItem.timestamp < CACHE_DURATION;
     };
 
-    const getProductos = useCallback(async (nombre?: string, categoria?: string, pageParam: number = 1) => {
+    const getProductos = useCallback(async (nombre?: string, categoria?: number, pageParam: number = 1) => {
         try {
             setLoading(true);
             setError(null);
@@ -73,7 +73,7 @@ export const useProductos = () => {
         }
     }, []);
 
-    const debouncedGetProductos = useCallback((nombre?: string, categoria?: string, pageParam: number = 1) => {
+    const debouncedGetProductos = useCallback((nombre?: string, categoria?: number, pageParam: number = 1) => {
         if (debounceTimeout.current) {
             clearTimeout(debounceTimeout.current);
         }

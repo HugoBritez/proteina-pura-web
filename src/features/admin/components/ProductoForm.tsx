@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Tables, TablesInsert } from '../../../shared/types/database.types';
 import { defaultConfig } from '../../../config/client.config';
 import { supabase } from '../../../shared/services/supabaseService';
+import { categoriasApi } from '../../products/services/categoriasApi';
 
 type Producto = Tables<'productos'>;
 type ProductoInput = TablesInsert<'productos'>;
@@ -17,7 +18,7 @@ const initialForm: ProductoInput = {
   descripcion: '',
   precio: 0,
   imagen: '',
-  categoria: '',
+  categoria_id: undefined,
   stock: true,
 };
 
@@ -27,6 +28,48 @@ export const ProductoForm = ({ producto, onClose, onSuccess }: ProductoFormProps
   const [error, setError] = useState<string | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [categorias, setCategorias] = useState<{ id: number; descripcion: string }[]>([]);
+  const [sugerencias, setSugerencias] = useState<{ id: number; descripcion: string }[]>([]);
+  const [inputCategoria, setInputCategoria] = useState('');
+  const [showSugerencias, setShowSugerencias] = useState(false);
+  const sugerenciasRef = useRef<HTMLDivElement>(null);
+
+  // Cargar categorías al montar el componente
+  useEffect(() => {
+    const cargarCategorias = async () => {
+      try {
+        const data = await categoriasApi.getCategorias();
+        setCategorias(data);
+      } catch (error) {
+        console.error('Error al cargar categorías:', error);
+      }
+    };
+    cargarCategorias();
+  }, []);
+
+  // Manejar clic fuera del componente de sugerencias
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sugerenciasRef.current && !sugerenciasRef.current.contains(event.target as Node)) {
+        setShowSugerencias(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Actualizar sugerencias cuando cambia el input
+  useEffect(() => {
+    if (inputCategoria.trim()) {
+      const coincidencias = categorias.filter(cat =>
+        cat.descripcion.toLowerCase().includes(inputCategoria.toLowerCase())
+      );
+      setSugerencias(coincidencias);
+    } else {
+      setSugerencias([]);
+    }
+  }, [inputCategoria, categorias]);
 
   const uploadImage = async (file: File) => {
     try {
@@ -109,6 +152,54 @@ export const ProductoForm = ({ producto, onClose, onSuccess }: ProductoFormProps
       setError('Error al guardar el producto');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCategoriaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const valor = e.target.value;
+    setInputCategoria(valor);
+    setShowSugerencias(true);
+  };
+
+  const handleSelectCategoria = (categoria: { id: number; descripcion: string }) => {
+    setForm({ ...form, categoria_id: categoria.id });
+    setInputCategoria(categoria.descripcion);
+    setShowSugerencias(false);
+  };
+
+  const handleAddNewCategoria = async () => {
+    try {
+      // Verificar si ya existe una categoría con el mismo nombre (ignorando mayúsculas/minúsculas)
+      const categoriaExistente = categorias.find(
+        cat => cat.descripcion.toLowerCase() === inputCategoria.toLowerCase()
+      );
+
+      if (categoriaExistente) {
+        // Si existe, seleccionar la categoría existente
+        setForm({ ...form, categoria_id: categoriaExistente.id });
+        setInputCategoria(categoriaExistente.descripcion);
+        setShowSugerencias(false);
+        return;
+      }
+
+      // Si no existe, crear la nueva categoría
+      const { data, error } = await supabase
+        .from('categorias')
+        .insert([{ descripcion: inputCategoria, estado: 1 }])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setCategorias([...categorias, data]);
+        setForm({ ...form, categoria_id: data.id });
+        setInputCategoria(data.descripcion);
+        setShowSugerencias(false);
+      }
+    } catch (error) {
+      console.error('Error al crear categoría:', error);
+      setError('Error al crear la categoría');
     }
   };
 
@@ -211,7 +302,7 @@ export const ProductoForm = ({ producto, onClose, onSuccess }: ProductoFormProps
           </div>
         )}
       </div>
-      <div>
+      <div className="relative">
         <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="categoria">
           Categoría
         </label>
@@ -219,9 +310,35 @@ export const ProductoForm = ({ producto, onClose, onSuccess }: ProductoFormProps
           id="categoria"
           type="text"
           className="w-full border rounded px-3 py-2"
-          value={form.categoria ?? ''}
-          onChange={e => setForm({ ...form, categoria: e.target.value })}
+          value={inputCategoria}
+          onChange={handleCategoriaChange}
+          onFocus={() => setShowSugerencias(true)}
         />
+        {showSugerencias && (inputCategoria.trim() || sugerencias.length > 0) && (
+          <div
+            ref={sugerenciasRef}
+            className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg"
+          >
+            {sugerencias.length > 0 ? (
+              sugerencias.map((categoria) => (
+                <div
+                  key={categoria.id}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleSelectCategoria(categoria)}
+                >
+                  {categoria.descripcion}
+                </div>
+              ))
+            ) : (
+              <div
+                className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-indigo-600"
+                onClick={handleAddNewCategoria}
+              >
+                + Agregar "{inputCategoria}"
+              </div>
+            )}
+          </div>
+        )}
       </div>
       <div className="flex items-center gap-3">
         <span className="text-sm text-gray-700">Stock:</span>

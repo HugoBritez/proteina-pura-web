@@ -6,7 +6,7 @@ import ProductDetail from './ProductDetail';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ArticulosGridProps {
-    categoria: string;
+    categoria?: number;
     busqueda: string;
 }
 

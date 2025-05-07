@@ -5,7 +5,7 @@ type Product = Database['public']['Tables']['productos']['Row'];
 
 interface GetProductsParams {
   nombre?: string;
-  categoria?: string;
+  categoria?: number;
   page?: number;
   pageSize?: number;
 }
@@ -38,9 +38,9 @@ export const productsApi = {
       query = query.ilike('nombre', `%${nombre.trim().toLowerCase()}%`);
     }
     
-    // Solo aplicar filtro de categoría si no es 'Todos' y tiene un valor válido
-    if (categoria && categoria.trim() !== '' && categoria.trim() !== 'Todos') {
-      query = query.ilike('categoria', `%${categoria.trim().toLowerCase()}%`);
+    // Solo aplicar filtro de categoría si tiene un valor válido y no es la categoría "Todos" (id: 1)
+    if (categoria && categoria !== 1) {
+      query = query.eq('categoria_id', categoria);
     }
 
     const { data, error, count } = await query;

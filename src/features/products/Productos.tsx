@@ -1,40 +1,51 @@
 import { Menu as MenuIcon } from "lucide-react";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Menu from "../../shared/ui/Menu/Menu";
 import { MenuItem } from "../../shared/ui/Menu/types";
 import ArticulosGrid from "./modules/ArticulosGrid";
 import { useClientConfig } from "../../config/ClientConfigContext";
 import { useProductos } from "./hooks/useProductos";
+import { useCategorias } from "./hooks/useCategorias";
 
 const Productos = () => {
     const { config } = useClientConfig();
+    const { categorias, loading: loadingCategorias, error: errorCategorias } = useCategorias();
     const [isMenuCategoriasOpen, setIsMenuCategoriasOpen] = useState(false);
-    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(config.categorias[0]);
+    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<{ id: number, descripcion: string } | null>(null);
     const [busqueda, setBusqueda] = useState("");
     const { getProductos } = useProductos();
 
+    useEffect(() => {
+        if (categorias.length > 0 && !categoriaSeleccionada) {
+            setCategoriaSeleccionada(categorias[0]);
+        }
+    }, [categorias, categoriaSeleccionada]);
+
     const handleSelectCategoria = useCallback((item: MenuItem) => {
-        const categoria = config.categorias.find(cat => cat.id === item.id);
+        const categoria = categorias.find(cat => cat.id === item.id);
         if (categoria) {
             setCategoriaSeleccionada(categoria);
             getProductos(
                 busqueda === '' ? undefined : busqueda,
-                categoria.nombre === 'Todos' ? undefined : categoria.nombre,
+                categoria.id,
                 1
             );
         }
         setIsMenuCategoriasOpen(false);
-    }, [config.categorias, busqueda, getProductos]);
+    }, [categorias, busqueda, getProductos]);
 
     const handleBusqueda = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         const valor = e.target.value;
         setBusqueda(valor);
         getProductos(
             valor === '' ? undefined : valor,
-            categoriaSeleccionada.nombre === 'Todos' ? undefined : categoriaSeleccionada.nombre,
+            categoriaSeleccionada ? categoriaSeleccionada.id : undefined,
             1
         );
-    }, [categoriaSeleccionada.nombre, getProductos]);
+    }, [categoriaSeleccionada, getProductos]);
+
+    if (loadingCategorias) return <div>Cargando categorías...</div>;
+    if (errorCategorias) return <div>{errorCategorias}</div>;
 
     return (
         <div 
@@ -64,9 +75,9 @@ const Productos = () => {
                         </button>
 
                         <Menu
-                            items={config.categorias.map(cat => ({
+                            items={categorias.map(cat => ({
                                 id: cat.id,
-                                content: cat.nombre
+                                content: cat.descripcion
                             }))}
                             isOpen={isMenuCategoriasOpen}
                             onClose={() => setIsMenuCategoriasOpen(false)}
@@ -78,11 +89,11 @@ const Productos = () => {
                 </div>
                 <div className="p-4">
                     <h2 className="text-sm font-semibold text-slate-500">
-                        Categoría seleccionada: {categoriaSeleccionada.nombre}
+                        Categoría seleccionada: {categoriaSeleccionada?.descripcion}
                     </h2>
                 </div>
                 <ArticulosGrid 
-                    categoria={categoriaSeleccionada.nombre}
+                    categoria={categoriaSeleccionada ? categoriaSeleccionada.id : undefined}
                     busqueda={busqueda}
                 />
             </div>

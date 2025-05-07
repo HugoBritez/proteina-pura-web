@@ -4,6 +4,6 @@ export interface Producto {
     descripcion: string | null;
     precio: number;
     imagen: string | null;
-    categoria: string | null;
+    categoria_id: number | null;
     stock: boolean | null;
 }
