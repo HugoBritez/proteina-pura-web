@@ -1,9 +1,12 @@
 import { useNavigate } from "react-router";
 import { Tab, useTabs } from "./tabs";
+import { useCartStore } from "../../../features/cart/cartStore";
 
 export const BottomBar = () => {
     const navigate = useNavigate();
-    const tabs = useTabs()
+    const tabs = useTabs();
+    const items = useCartStore(state => state.items);
+    const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
     return (
         <div
@@ -18,7 +21,12 @@ export const BottomBar = () => {
                             ${tab.isActive ? 'text-red-500 scale-110' : 'text-gray-500 hover:text-red-500'}`}
                         onClick={() => navigate(tab.path)}
                     >
-                        <div className="transition-transform duration-300">
+                        <div className="transition-transform duration-300 relative">
+                            {tab.label === 'Carrito' && totalItems > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                    {totalItems}
+                                </span>
+                            )}
                             {tab.icon}
                         </div>
                         <p className="mt-1 transition-colors duration-300">{tab.label}</p>
