@@ -19,7 +19,7 @@ export const ProductoCard = ({ producto, onEdit, onDelete }: ProductoCardProps) 
       />
       <div className="flex-1 flex flex-col justify-center">
         <h2 className="text-base font-bold">{producto.nombre}</h2>
-        <p className="text-gray-600 text-sm">{producto.descripcion}</p>
+        <p className="text-gray-600 text-sm">{producto.stock ? 'En stock' : 'Agotado'}</p>
         <p className="text-indigo-600 font-semibold mt-1">${producto.precio}</p>
       </div>
       <div className="flex flex-col gap-2 ml-4">

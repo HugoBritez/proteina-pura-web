@@ -2,6 +2,8 @@ import { Minus, Plus as PlusIcon, ShoppingCart } from 'lucide-react'
 import { useState } from 'react'
 import { useClientConfig } from '../../../config/ClientConfigContext'
 import { Producto } from '../types/product.type'
+import { formatCurrency } from '../utils/formatCurrency'
+import { useCartStore } from '../../cart/cartStore'
 
 interface ProductCardProps {
     producto: Producto
@@ -11,6 +13,7 @@ interface ProductCardProps {
 const ProductCard = ({ producto, onSelect }: ProductCardProps) => {
     const { config } = useClientConfig()
     const [cantidad, setCantidad] = useState(1)
+    const addItem = useCartStore(state => state.addItem)
 
     const handleIncrement = () => {
         if (cantidad < 10) {
@@ -24,11 +27,15 @@ const ProductCard = ({ producto, onSelect }: ProductCardProps) => {
         }
     }
 
-    const formatPrice = (price: number) => {
-        return new Intl.NumberFormat('es-AR', {
-            style: 'currency',
-            currency: 'ARS'
-        }).format(price)
+    const handleAddToCart = (e: React.MouseEvent) => {
+        e.stopPropagation(); // Evitar que se active el onClick del card
+        addItem({
+            id: producto.id.toString(),
+            name: producto.nombre,
+            price: producto.precio,
+            quantity: cantidad,
+            image: producto.imagen || '/placeholder.png'
+        });
     }
 
     return (
@@ -67,7 +74,7 @@ const ProductCard = ({ producto, onSelect }: ProductCardProps) => {
                         className="text-sm font-bold"
                         style={{ color: config.tema.colores.primario }}
                     >
-                        {formatPrice(producto.precio)}
+                        {formatCurrency(producto.precio)}
                     </p>
                 </div>
                 
@@ -76,7 +83,10 @@ const ProductCard = ({ producto, onSelect }: ProductCardProps) => {
                         <button 
                             className="text-white p-1 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             style={{ backgroundColor: config.tema.colores.primario }}
-                            onClick={handleDecrement}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleDecrement();
+                            }}
                             disabled={cantidad <= 1}
                         >
                             <Minus size={12} />
@@ -87,6 +97,7 @@ const ProductCard = ({ producto, onSelect }: ProductCardProps) => {
                             value={cantidad}
                             min={1}
                             max={10}
+                            onClick={(e) => e.stopPropagation()}
                             onChange={(e) => {
                                 const value = Math.min(Math.max(1, Number(e.target.value)), 10);
                                 setCantidad(value);
@@ -95,18 +106,22 @@ const ProductCard = ({ producto, onSelect }: ProductCardProps) => {
                         <button 
                             className="text-white p-1 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             style={{ backgroundColor: config.tema.colores.primario }}
-                            onClick={handleIncrement}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleIncrement();
+                            }}
                             disabled={cantidad >= 10}
                         >
                             <PlusIcon size={12} />
                         </button>
                     </div>
                     <button 
-                        className="p-1.5 rounded-lg transition-colors text-sm font-medium"
+                        className="p-1.5 rounded-lg transition-colors text-sm font-medium hover:bg-slate-50"
                         style={{ 
                             borderColor: config.tema.colores.primario,
                             color: config.tema.colores.primario
                         }}
+                        onClick={handleAddToCart}
                     >
                         <ShoppingCart size={12} />
                     </button>

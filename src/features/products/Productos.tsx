@@ -16,20 +16,29 @@ const Productos = () => {
     const { getProductos } = useProductos();
 
     useEffect(() => {
-        if (categorias.length > 0 && !categoriaSeleccionada) {
-            setCategoriaSeleccionada(categorias[0]);
+        if (categorias?.length > 0 && !categoriaSeleccionada) {
+            setCategoriaSeleccionada({ id: 0, descripcion: "Todos" });
         }
     }, [categorias, categoriaSeleccionada]);
 
     const handleSelectCategoria = useCallback((item: MenuItem) => {
-        const categoria = categorias.find(cat => cat.id === item.id);
-        if (categoria) {
-            setCategoriaSeleccionada(categoria);
+        if (item.id === 0) {
+            setCategoriaSeleccionada({ id: 0, descripcion: "Todos" });
             getProductos(
                 busqueda === '' ? undefined : busqueda,
-                categoria.id,
+                undefined,
                 1
             );
+        } else {
+            const categoria = categorias?.find(cat => cat.id === item.id);
+            if (categoria) {
+                setCategoriaSeleccionada(categoria);
+                getProductos(
+                    busqueda === '' ? undefined : busqueda,
+                    categoria.id,
+                    1
+                );
+            }
         }
         setIsMenuCategoriasOpen(false);
     }, [categorias, busqueda, getProductos]);
@@ -39,13 +48,20 @@ const Productos = () => {
         setBusqueda(valor);
         getProductos(
             valor === '' ? undefined : valor,
-            categoriaSeleccionada ? categoriaSeleccionada.id : undefined,
+            categoriaSeleccionada?.id === 0 ? undefined : categoriaSeleccionada?.id,
             1
         );
     }, [categoriaSeleccionada, getProductos]);
 
-    if (loadingCategorias) return <div>Cargando categorías...</div>;
-    if (errorCategorias) return <div>{errorCategorias}</div>;
+    // if (loadingCategorias) return <div>Cargando categorías...</div>;
+    // if (errorCategorias) return <div>{errorCategorias}</div>;
+
+    const categoriasOrdenadas = [
+        { id: 0, descripcion: "Todos" },
+        ...(categorias || [])
+            .filter(cat => cat.descripcion !== "Todos")
+            .sort((a, b) => a.descripcion.localeCompare(b.descripcion))
+    ];
 
     return (
         <div 
@@ -75,10 +91,15 @@ const Productos = () => {
                         </button>
 
                         <Menu
-                            items={categorias.map(cat => ({
-                                id: cat.id,
-                                content: cat.descripcion
-                            }))}
+                            items={loadingCategorias 
+                                ? [{ id: -1, content: "Cargando categorías..." }]
+                                : errorCategorias 
+                                    ? [{ id: -1, content: errorCategorias }]
+                                    : categoriasOrdenadas.map(cat => ({
+                                        id: cat.id,
+                                        content: cat.descripcion
+                                    }))
+                            }
                             isOpen={isMenuCategoriasOpen}
                             onClose={() => setIsMenuCategoriasOpen(false)}
                             onSelect={handleSelectCategoria}
@@ -93,7 +114,7 @@ const Productos = () => {
                     </h2>
                 </div>
                 <ArticulosGrid 
-                    categoria={categoriaSeleccionada ? categoriaSeleccionada.id : undefined}
+                    categoria={categoriaSeleccionada?.id === 0 ? undefined : categoriaSeleccionada?.id}
                     busqueda={busqueda}
                 />
             </div>
