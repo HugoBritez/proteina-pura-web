@@ -10,8 +10,8 @@ export const BottomBar = () => {
 
     return (
         <div
-         className="fixed bottom-0 left-0 right-0 bg-white shadow-md border m-2 border-gray-200 z-50 p-4
-         rounded-lg flex justify-between items-center "
+         className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-md border m-2 border-gray-200 z-50 p-4
+         rounded-lg flex justify-between items-center"
         >
             <div className="flex justify-around items-center w-full">
                 {tabs.map((tab: Tab) => (

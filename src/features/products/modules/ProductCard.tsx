@@ -4,7 +4,7 @@ import { useClientConfig } from '../../../config/ClientConfigContext'
 import { Producto } from '../types/product.type'
 import { formatCurrency } from '../utils/formatCurrency'
 import { useCartStore } from '../../cart/cartStore'
-import Toast from '../../../shared/ui/Toast/Toast'
+import { Notification } from '../../../shared/ui/Notification/Notification'
 
 interface ProductCardProps {
     producto: Producto
@@ -14,7 +14,7 @@ interface ProductCardProps {
 const ProductCard = ({ producto, onSelect }: ProductCardProps) => {
     const { config } = useClientConfig()
     const [cantidad, setCantidad] = useState(1)
-    const [showToast, setShowToast] = useState(false)
+    const [showNotification, setShowNotification] = useState(false)
     const addItem = useCartStore(state => state.addItem)
 
     const handleIncrement = () => {
@@ -38,7 +38,10 @@ const ProductCard = ({ producto, onSelect }: ProductCardProps) => {
             quantity: cantidad,
             image: producto.imagen || '/placeholder.png'
         });
-        setShowToast(true);
+        setShowNotification(true);
+        setTimeout(() => {
+            setShowNotification(false);
+        }, 1500);
     }
 
     return (
@@ -133,10 +136,10 @@ const ProductCard = ({ producto, onSelect }: ProductCardProps) => {
                 </div>
             </div>
 
-            <Toast 
-                message={`${producto.nombre} agregado al carrito`}
-                isVisible={showToast}
-                onClose={() => setShowToast(false)}
+            <Notification 
+                message={`${cantidad} ${cantidad === 1 ? 'unidad' : 'unidades'} de ${producto.nombre} agregadas al carrito`}
+                isVisible={showNotification}
+                onClose={() => setShowNotification(false)}
             />
         </>
     )

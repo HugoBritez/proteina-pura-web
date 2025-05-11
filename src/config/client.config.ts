@@ -39,7 +39,7 @@ export const defaultConfig: ClientConfig = {
         telefono: "+54 9 11 1234-5678",
         email: "contacto@proteinapura.com",
         direccion: "Av. Corrientes 1234, CABA",
-        logo: "/logo.png",
+        logo: "./src/assets/media/logo_principal.png",
         api_url: "http://localhost:3000"
     },
     tema: {
@@ -51,8 +51,8 @@ export const defaultConfig: ClientConfig = {
             subtexto: "#64748B"
         },
         fuentes: {
-            principal: "Inter, sans-serif",
-            secundaria: "Roboto, sans-serif"
+            principal: "Han Sans, Roboto, sans-serif",
+            secundaria: "Montserrat, sans-serif"
         }
     },
     categorias: [

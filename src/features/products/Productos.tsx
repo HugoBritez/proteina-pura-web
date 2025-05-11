@@ -65,13 +65,12 @@ const Productos = () => {
 
     return (
         <div 
-            className="flex flex-col w-full h-screen pt-4 rounded-b-3xl"
+            className="flex flex-col w-full h-screen pt-4 md:pt-0 rounded-b-3xl"
             style={{ backgroundColor: config.tema.colores.primario }}
         >
-            <p className="text-white text-2xl font-bold text-left pl-4">
-                {config.empresa.nombre}
-            </p>
-            <div className="flex flex-col bg-slate-50 p-2 w-full h-full mt-8 rounded-t-3xl">
+            <img src={config.empresa.logo} alt={config.empresa.nombre} className="h-16 w-full cursor-pointer  object-cover" />
+
+            <div className="flex flex-col bg-slate-50 p-2 w-full h-full mt-4 md:mt-0 rounded-t-3xl">
                 <div className="flex flex-row gap-1 items-center w-full mx-auto mt-1">
                     <input
                         type="text"
@@ -108,7 +107,7 @@ const Productos = () => {
                         />
                     </div>
                 </div>
-                <div className="p-4">
+                <div className="p-4 md:hidden">
                     <h2 className="text-sm font-semibold text-slate-500">
                         Categoría seleccionada: {categoriaSeleccionada?.descripcion}
                     </h2>

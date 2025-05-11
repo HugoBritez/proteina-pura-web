@@ -4,7 +4,7 @@ import { supabase } from '../../shared/services/supabaseService';
 import { useNavigate } from 'react-router-dom';
 import { defaultConfig } from '../../config/client.config';
 import { Eye, EyeOff } from 'lucide-react';
-import  LogoPrincipal  from '../../assets/productos/media/logo_completo.png';
+import  LogoPrincipal  from '../../assets/media/logo_completo.png';
 
 export const Auth = () => {
   const [email, setEmail] = useState('');
