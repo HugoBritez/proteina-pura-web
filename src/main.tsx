@@ -9,6 +9,7 @@ import { ClientConfigProvider } from './config/ClientConfigContext'
 import { Dashboard } from './features/admin/Dashboard'
 import { Auth } from './features/auth/Auth'
 import Cart from './features/cart/Cart'
+import { HomePage } from './features/home/HomePage'
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
@@ -28,7 +29,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout><div>Home</div></Layout>,
+    element: <Layout><HomePage/></Layout>,
   },
   {
     path: "/shop",
