@@ -63,7 +63,7 @@ export const Header = () => {
                             <h2 className="text-xl font-bold">Carrito</h2>
                             <button
                                 onClick={() => setIsCartOpen(false)}
-                                className="text-gray-500 hover:text-gray-700"
+                                className="text-gray-500 hover:text-gray-700 text-4xl"
                             >
                                 ×
                             </button>
