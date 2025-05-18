@@ -472,7 +472,6 @@ export const HomePage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="bg-transparent border-2 border-white text-white px-10 py-4 rounded-full font-semibold hover:bg-white/10 transition-colors text-lg"
-                onClick={() => navigate("/contact")}
               >
                 Contactar Asesor
               </motion.button>
@@ -542,18 +541,6 @@ export const HomePage = () => {
             </div>
 
             <div>
-              <h4 className="text-xl font-bold mb-6 text-white">Enlaces Rápidos</h4>
-              <ul className="space-y-3 text-gray-400">
-                <li className="hover:text-white transition-colors cursor-pointer">Inicio</li>
-                <li className="hover:text-white transition-colors cursor-pointer">Tienda</li>
-                <li className="hover:text-white transition-colors cursor-pointer">Sobre Nosotros</li>
-                <li className="hover:text-white transition-colors cursor-pointer">Blog</li>
-                <li className="hover:text-white transition-colors cursor-pointer">Contacto</li>
-                <li className="hover:text-white transition-colors cursor-pointer">Preguntas Frecuentes</li>
-              </ul>
-            </div>
-
-            <div>
               <h4 className="text-xl font-bold mb-6 text-white">Contacto</h4>
               <ul className="space-y-4 text-gray-400">
                 <li className="flex items-start gap-3">
@@ -610,33 +597,6 @@ export const HomePage = () => {
                   <span>{config.empresa.direccion}</span>
                 </li>
               </ul>
-
-              <div className="mt-8">
-                <h5 className="font-semibold mb-3 text-white">Suscríbete a nuestro newsletter</h5>
-                <div className="flex">
-                  <input
-                    type="email"
-                    placeholder="Tu email"
-                    className="bg-slate-700 text-white px-4 py-2 rounded-l-lg w-full focus:outline-none focus:ring-1 focus:ring-red-500"
-                  />
-                  <button className="bg-red-500 text-white px-4 py-2 rounded-r-lg hover:bg-red-600 transition-colors">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="m5 12 14 0"></path>
-                      <path d="m12 5 7 7-7 7"></path>
-                    </svg>
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
 
