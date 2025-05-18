@@ -1,8 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import { RouterProvider, createBrowserRouter, useLocation } from 'react-router-dom'
-import { BottomBar } from './shared/ui/BottomBar/BottomBar'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Header } from './shared/ui/Header/Header'
 import Productos from './features/products/Productos'
 import { ClientConfigProvider } from './config/ClientConfigContext'
@@ -12,8 +11,6 @@ import Cart from './features/cart/Cart'
 import { HomePage } from './features/home/HomePage'
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const location = useLocation();
-  const showBottomBar = location.pathname !== '/login';
 
   return (
     <div className="min-h-screen">
@@ -21,7 +18,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <main className="md:pt-16">
         {children}
       </main>
-      {showBottomBar && <BottomBar />}
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingBag, ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore } from '../../../features/cart/cartStore';
 import { useClientConfig } from '../../../config/ClientConfigContext';
@@ -13,39 +13,26 @@ export const Header = () => {
     const [isCartOpen, setIsCartOpen] = useState(false);
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
-    const navItems = [
-        { label: 'Inicio', path: '/' },
-        { label: 'Tienda', path: '/shop' },
-        { label: 'Contacto', path: '/contact' },
-    ];
-
     return (
         <header 
-            className="hidden md:flex fixed top-0 left-0 right-0 z-50 h-16 px-4 items-center justify-between"
+            className=" flex fixed top-0 left-0 right-0 z-50 h-16 px-4 items-center justify-between"
             style={{ backgroundColor: config.tema.colores.primario }}
         >
             <div className="flex items-center">
-                <img 
-                    src={config.empresa.logo} 
-                    alt={config.empresa.nombre}
-                    className="h-36 w-auto cursor-pointer"
-                    onClick={() => navigate('/')}
-                />
+                <p className='text-white text-xl cursor-pointer' onClick={() => navigate('/')}
+                style={{fontFamily: config.tema.fuentes.principal}}
+                    >
+                {config.empresa.nombre.toUpperCase()}</p>
             </div>
 
-            <nav className="hidden md:flex items-center gap-8 ">
-                {navItems.map((item) => (
-                    <button
-                        key={item.path}
-                        onClick={() => navigate(item.path)}
-                        className="text-white hover:bg-white p-2 rounded-md hover:text-red-500 ease-in-out duration-300 transition-colors cursor-pointer"
-                    >
-                        {item.label}
-                    </button>
-                ))}
-            </nav>
 
             <div className="flex items-center">
+                <button
+                    onClick={() => setIsCartOpen(true)}
+                    className="relative p-2 text-white hover:text-red-500 ease-in-out duration-300 hover:bg-white rounded-md transition-colors"
+                >
+                    <ShoppingBag size={24} />
+                </button>
                 <button
                     onClick={() => setIsCartOpen(true)}
                     className="relative p-2 text-white hover:text-red-500 ease-in-out duration-300 hover:bg-white rounded-md transition-colors"

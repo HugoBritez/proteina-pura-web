@@ -47,7 +47,7 @@ export const defaultConfig: ClientConfig = {
             subtexto: "#64748B"
         },
         fuentes: {
-            principal: "Han Sans, Roboto, sans-serif",
+            principal: "Black Han Sans, Roboto, sans-serif",
             secundaria: "Montserrat, sans-serif"
         }
     },
