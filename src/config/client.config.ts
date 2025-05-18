@@ -20,10 +20,6 @@ export interface ClientConfig {
             secundaria: string;
         };
     };
-    categorias: {
-        id: number;
-        nombre: string;
-    }[];
     redesSociales: {
         facebook?: string;
         instagram?: string;
@@ -35,10 +31,10 @@ export interface ClientConfig {
 // Configuración por defecto
 export const defaultConfig: ClientConfig = {
     empresa: {
-        nombre: "Proteína Pura",
-        telefono: "+54 9 11 1234-5678",
+        nombre: "Proteina Pura",
+        telefono: "+595 983 312 502",
         email: "contacto@proteinapura.com",
-        direccion: "Av. Corrientes 1234, CABA",
+        direccion: "Dr.Blas Garay, Cnel. Oviedo 050101, Paraguay",
         logo: "./src/assets/media/logo_principal.png",
         api_url: "http://localhost:3000"
     },
@@ -55,19 +51,9 @@ export const defaultConfig: ClientConfig = {
             secundaria: "Montserrat, sans-serif"
         }
     },
-    categorias: [
-        { id: 1, nombre: "Todos" },
-        { id: 2, nombre: "Proteinas" },
-        { id: 3, nombre: "Creatina" },
-        { id: 4, nombre: "Pre-Entreno" },
-        { id: 5, nombre: "Aminoácidos" },
-        { id: 6, nombre: "Suplementos" },
-        { id: 7, nombre: "Accesorios" },
-        { id: 8, nombre: "Otros" }
-    ],
     redesSociales: {
-        facebook: "https://facebook.com/proteinapura",
-        instagram: "https://instagram.com/proteinapura",
-        whatsapp: "https://wa.me/5491112345678"
+        facebook: "https://www.facebook.com/profile.php?id=61552400132945&locale=es_LA",
+        instagram: "https://www.instagram.com/proteinapurapy",
+        whatsapp: "wa.me/595983312502"
     }
 }; 

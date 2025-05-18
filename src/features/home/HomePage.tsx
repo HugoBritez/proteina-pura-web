@@ -8,12 +8,17 @@ import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { useCartStore } from '../cart/cartStore';
 import { formatCurrency } from '../products/utils/formatCurrency';
+import { defaultConfig } from '../../config/client.config';
+import { useNavigate } from 'react-router';
 
 export const HomePage = () => {
   const { productos, loading, getProductos } = useProductos();
   const addToCart = useCartStore(state => state.addItem);
   const productosRef = useRef(null);
   const isProductosInView = useInView(productosRef, { once: true, amount: 0.2 });
+  const config  = defaultConfig;
+  const fechaActual = new Date().getFullYear();
+  const navigate = useNavigate();
 
   // Cargar productos destacados al montar el componente
   React.useEffect(() => {
@@ -50,16 +55,17 @@ export const HomePage = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
-        className="flex flex-col w-full min-h-screen items-center justify-center bg-gradient-to-b from-red-100 to-red-500 relative overflow-hidden"
+        className="flex flex-col w-full min-h-screen items-center justify-center bg-gradient-to-b from-red-100 to-[#EF4444] relative overflow-hidden"
       >
         <div className="container mx-auto px-4 flex flex-col items-center z-10">
           <motion.h1 
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-bold text-white text-center mb-8"
+            className="text-5xl md:text-7xl lg:text-8xl  text-white text-center mb-8"
+            style={{fontFamily: "'Black Han Sans', sans-serif"}}
           >
-            Proteína Pura
+            {config.empresa.nombre.toUpperCase()}
           </motion.h1>
           <motion.p 
             initial={{ y: -30, opacity: 0 }}
@@ -75,7 +81,8 @@ export const HomePage = () => {
             transition={{ duration: 0.5, delay: 0.6 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-white text-red-500 px-12 py-4 rounded-full font-semibold hover:bg-red-50 transition-colors text-xl md:text-2xl"
+            className="bg-white text-red-500 px-12 py-4 rounded-full font-semibold hover:bg-red-50 transition-colors text-xl md:text-2xl cursor-pointer"
+            onClick={() => navigate('/shop')}
           >
             Descubre Nuestros Productos
           </motion.button>
@@ -237,7 +244,8 @@ export const HomePage = () => {
             whileTap={{ scale: 0.95 }}
             transition={{ duration: 0.5, delay: 0.4 }}
             viewport={{ once: true }}
-            className="bg-white text-red-500 px-12 py-4 rounded-full font-semibold hover:bg-red-50 transition-colors text-xl md:text-2xl"
+            className="bg-white text-red-500 px-12 py-4 rounded-full font-semibold hover:bg-red-50 transition-colors text-xl md:text-2xl cursor-pointer"
+            onClick={() => navigate('/shop')}
           >
             Comprar Ahora
           </motion.button>
@@ -249,7 +257,9 @@ export const HomePage = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
             <div>
-              <h3 className="text-2xl font-bold mb-6">Proteína Pura</h3>
+              <h3 className="text-2xl  mb-6" style={{fontFamily: "'Black Han Sans', sans-serif"}}>
+                {config.empresa.nombre}
+              </h3>
               <p className="text-gray-400 text-lg">Tu aliado en el camino hacia una vida más saludable</p>
             </div>
             <div>
@@ -265,21 +275,22 @@ export const HomePage = () => {
               <h4 className="text-xl font-semibold mb-6">Contacto</h4>
               <ul className="space-y-4 text-gray-400 text-lg">
                 <li>Email: info@proteinapura.com</li>
-                <li>Tel: (123) 456-7890</li>
-                <li>WhatsApp: +1 234 567 890</li>
+                <li>Tel: {config.empresa.telefono}</li>
+                <li>Direccion: {config.empresa.direccion}</li>
               </ul>
             </div>
             <div>
               <h4 className="text-xl font-semibold mb-6">Síguenos</h4>
               <div className="flex space-x-6 text-lg">
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">Instagram</a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">Facebook</a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">Twitter</a>
+                <a href={`${config.redesSociales.instagram}`} className="text-gray-400 hover:text-white transition-colors">Instagram</a>
+                <a href={`${config.redesSociales.facebook}`} className="text-gray-400 hover:text-white transition-colors">Facebook</a>
+                <a href={`${config.redesSociales.whatsapp}`} className="text-gray-400 hover:text-white transition-colors">Whatsapp</a>
               </div>
             </div>
           </div>
           <div className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400 text-lg">
-            <p>&copy; 2024 Proteína Pura. Todos los derechos reservados.</p>
+            <p>&copy;{fechaActual} Proteína Pura. Todos los derechos reservados.</p>
+            <p>Desarrollado por INSIGHT</p>
           </div>
         </div>
       </footer>
