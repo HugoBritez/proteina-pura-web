@@ -65,9 +65,7 @@ const Productos = () => {
 
     return (
         <div 
-            className="flex flex-col w-full h-screen  md:pt-0 rounded-b-3xl"        >
-            <img src={config.empresa.logo} alt={config.empresa.nombre} className="h-16 w-full cursor-pointer  object-cover lg:hidden" />
-
+            className="flex flex-col w-full h-screen pt-16 md:pt-4 rounded-b-3xl bg-slate-50"        >
             <div className="flex flex-col bg-slate-50 p-2 w-full h-full mt-4 md:mt-0 rounded-t-3xl">
                 <div className="flex flex-row gap-1 items-center w-full mx-auto mt-1">
                     <input
