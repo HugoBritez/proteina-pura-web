@@ -26,10 +26,14 @@ export const Header = () => {
             </div>
 
 
-            <div className="flex items-center">
+            <div className="flex items-center gap-4">
                 <button
-                    onClick={() => setIsCartOpen(true)}
-                    className="relative p-2 text-white hover:text-red-500 ease-in-out duration-300 hover:bg-white rounded-md transition-colors"
+                    onClick={() => navigate('/shop')}
+                    className={`relative p-2 rounded-md transition-colors ${
+                        window.location.pathname === '/shop' 
+                            ? 'bg-white text-red-500 hover:bg-red-500 hover:text-white' 
+                            : 'text-white hover:bg-white hover:text-red-500'
+                    }`}
                 >
                     <ShoppingBag size={24} />
                 </button>
@@ -72,4 +76,4 @@ export const Header = () => {
             </AnimatePresence>
         </header>
     );
-}; 
+};

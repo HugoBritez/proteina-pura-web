@@ -65,9 +65,7 @@ const Productos = () => {
 
     return (
         <div 
-            className="flex flex-col w-full h-screen pt-4 md:pt-0 rounded-b-3xl"
-            style={{ backgroundColor: config.tema.colores.primario }}
-        >
+            className="flex flex-col w-full h-screen  md:pt-0 rounded-b-3xl"        >
             <img src={config.empresa.logo} alt={config.empresa.nombre} className="h-16 w-full cursor-pointer  object-cover lg:hidden" />
 
             <div className="flex flex-col bg-slate-50 p-2 w-full h-full mt-4 md:mt-0 rounded-t-3xl">
